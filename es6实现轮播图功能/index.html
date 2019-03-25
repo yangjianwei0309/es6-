@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>轮播</title>
+	<link rel="stylesheet" type="text/css" href="./style.css">
+	<script type="text/javascript" src="https://cdn.bootcss.com/angular.js/1.2.8/angular.min.js"></script>
+</head>
+<body>
+	<div class="container" ng-app="myapp">
+		<div class="shuff" ng-controller="myCtrl" style="width:2000px; position: absolute;left:0;">
+			<img src="./fj1.jpg" alt="" name="1" />
+			<img src="./fj2.jpg" alt="" name="2" />
+			<img src="./fj3.jpg" alt="" name="3" />
+		</div>
+		<div id="buttons">
+			<div class="leftbutton"><</div>
+			<div class="rightbutton">></div>
+		</div>
+		<div id="dots">
+			<!-- <div class="wrap"> -->
+				<div class="dot active"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+			<!-- </div> -->
+		</div>
+	</div>
+</body>
+<script>
+	let container = document.getElementsByClassName('container')[0];
+	const shuff = document.getElementsByClassName('shuff')[0];
+	let imgTags = document.getElementsByTagName("img");
+	let dots = document.getElementsByClassName("dot");
+	// console.log(imgTags);
+	let index = 0;
+	let showCurrDot = () => {
+		for(let i=0,len=dots.length;i<len;i++) {
+			dots[i].className = "dot";
+		}
+		dots[index].className = "dot active";
+	}
+
+	let leftSlide = () => {
+		shuff.style.left = parseInt(shuff.style.left) - 500 + 'px';
+		// console.log(shuff.style.left);
+		if (shuff.style.left == "-1500px"){
+			shuff.style.left = "0px";
+		}
+		index ++;
+		if (index == 3){
+			index = 0;
+		}
+		showCurrDot();
+	};
+	let rightSlide = () => {
+		shuff.style.left = parseInt(shuff.style.left) + 500 + 'px';
+		if(shuff.style.left == "500px"){
+			shuff.style.left = "-1000px"
+		}
+		index --;
+		if (index == -1){
+			index = 2;
+		}
+		showCurrDot();
+	}
+	const rightBtn = document.getElementsByClassName("rightbutton")[0];
+	const leftBtn = document.getElementsByClassName("leftbutton")[0];
+	// 右按钮绑定点击事件
+	rightBtn.onclick = () => {
+		leftSlide();
+	};
+	// 左按钮绑定点击事件
+	leftBtn.onclick = () => {
+		rightSlide();
+	}
+	($index) => {
+		// imgTags[$index]
+	}
+
+	// 设置计数器，实现自动轮播
+	// 创建计数器函数启动自动轮播
+	let createInterval = ()=>{
+		return setInterval(leftSlide,2000)
+	}
+	let timer = createInterval();
+	// 鼠标移出执行事件
+	container.onmouseleave = () => {
+		timer = createInterval();
+	};
+	// 鼠标进入执行事件
+	container.onmouseenter = () =>{
+		clearInterval(timer);
+	}
+	
+	// 设置圆点与图片相对应
+	for (let i=0,len=dots.length;i<len;i++) {
+		dots[i].onclick = () => {
+			// console.log(i);
+			shuff.style.left = -500 * i + 'px';
+			index = i;
+			showCurrDot();
+		}
+	}
+	// angular 部分
+	let app = angular.module("myapp",[]);
+	app.controller("myCtrl",($scope) => {
+
+	});
+	// app.directive("imgTag",function(){
+		// return {
+
+		// }
+	// })
+</script>
+</html>
